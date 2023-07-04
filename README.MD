@@ -1,0 +1,1 @@
+This project is not commercial, but is only being developed for the purpose of teaching Django
