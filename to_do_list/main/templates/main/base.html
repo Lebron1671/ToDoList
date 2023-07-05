@@ -21,6 +21,32 @@
                 display:block;
             }
 
+            .top-panel {
+                display: flex;
+                justify-content: flex-end;
+                padding: 10px;
+                background-color: transparent; /* изменяем фоновый цвет на прозрачный */
+            }
+
+            .auth-buttons {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .auth-buttons a {
+                padding: 8px 16px;
+                text-decoration: none;
+                font-size: 16px;
+                color: #ffffff;
+                background-color: #00aa00; /* зеленый цвет */
+            }
+
+
+            .auth-buttons a.logout {
+                background-color: #aa0000; /* красный цвет */
+            }
+
             .sidenav a:hover{
 			    color:#f1f1f1;
 		    }
@@ -39,11 +65,23 @@
         <title>{% block title %}Nick's Site{% endblock %}</title>
     </head>
     <body>
+        <div class="top-panel">
+            <div class="auth-buttons">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="logout">Log Out</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Log In</a>
+                {% endif %}
+            </div>
+        </div>
         <div class="sidenav">
-            <a href="/home">Home</a>
-            <a href="/register">Register</a>
-            <a href="/create">Create</a>
-            <a href="/2">View</a>
+            <a href="/">Home</a>
+            {% if user.is_authenticated %}
+                <a href="/create">Create</a>
+                <a href="/view">View</a>
+            {% else %}
+                <a href="/register">Register</a>
+            {% endif %}
         </div>
         <div id="content" class="main">
             <div class="row justify-content-center">

@@ -3,5 +3,10 @@
     Home
 {% endblock %}
 {% block content %}
-    <h1>Home Page</h1>
+    {% if user.is_authenticated %}
+        Hi {{ user.username }}!
+        <p>You are logged in</p>
+    {% else %}
+        <p>You are not logged in</p>
+    {% endif %}
 {% endblock %}
