@@ -3,6 +3,23 @@
 {% block title %}Login Here{% endblock %}
 {% load crispy_forms_tags %}
 
+{% block extra_css %}
+    <style>
+        .form-group button.btn-success {
+            padding: 8px 16px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #ffffff;
+            background: linear-gradient(to right, #00aa00, #008800);
+            border-radius: 20px;
+        }
+
+        .form-group button.btn-success:hover {
+            opacity: 0.8;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <form method="post" class="form-group">
         {% csrf_token %}
