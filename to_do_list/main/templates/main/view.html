@@ -2,8 +2,91 @@
 
 {% block title %}View{% endblock %}
 
+{% block extra_css %}
+    <style>
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list-table th,
+        .list-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .list-table th {
+            font-weight: bold;
+        }
+
+        .delete-button {
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            line-height: 1;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            color: red;
+        }
+
+        .add-form {
+            margin-top: 20px;
+        }
+
+        .add-form input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+
+        .add-form button[type="submit"] {
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    {% for td in user.todolist.all %}
-        <p><a href="/{{td.id}}">{{td.name}}</a></p>
-    {% endfor %}
+    <table class="list-table">
+        <tr>
+            <th>List</th>
+            <th>Delete</th>
+        </tr>
+        {% for td in user.todolist.all %}
+            <tr>
+                <td><a href="/{{ td.id }}">{{ td.name }}</a></td>
+                <td>
+                    <form action="/delete_list/{{ td.id }}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">
+                            <span class="minus-symbol">-</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" action="/create/" class="form-group">
+        {% csrf_token %}
+         <div class="input-group mb-3">
+             <div class="input-group-prepend">
+                 <input type="text" name="new_item" placeholder="Enter list name">
+                 <button type="submit" name="save" class="btn btn-success">Create new list</button>
+            </div>
+            {{ form.name }}
+        </div>
+    </form>
 {% endblock %}

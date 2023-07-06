@@ -4,12 +4,126 @@
     Create New List
 {% endblock %}
 
+{% block extra_css %}
+    <style>
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list-table th,
+        .list-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .list-table th {
+            font-weight: bold;
+        }
+
+        .delete-button {
+        border: none;
+        background-color: red;
+        border-radius: 50%;
+        color: white;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        line-height: 1;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .delete-button:hover {
+        background-color: darkred;
+    }
+
+    .minus-symbol {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+        .add-form input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+
+        .add-form button[type="submit"] {
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        .edit-button {
+        border: none;
+        background-color: blue;
+        border-radius: 50%;
+        color: white;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        line-height: 1;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .edit-button:hover {
+        background-color: darkblue;
+    }
+
+    .edit-symbol {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    </style>
+{% endblock %}
+
 {% block content %}
+    <table class="list-table">
+    <tr>
+        <th>List</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    {% for td in user.todolist.all %}
+        <tr>
+            <td><a href="/{{ td.id }}">{{ td.name }}</a></td>
+            <td>
+                <a href="/edit_list/{{ td.id }}">
+                    <button class="edit-button">
+                        <span class="edit-symbol">&#9998;</span>
+                    </button>
+                </a>
+            </td>
+            <td>
+                <form action="/delete_list/{{ td.id }}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-button">
+                        <span class="minus-symbol">-</span>
+                    </button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+
     <form method="post" action="/create/" class="form-group">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit" name="save" class="btn btn-success">Create New</button>
+                <button type="submit" name="save" class="btn btn-success">Create new list</button>
             </div>
             {{ form.name }}
         </div>

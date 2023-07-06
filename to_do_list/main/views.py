@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
-from .models import ToDoList
+from .models import ToDoList, Item
 from .forms import CreateNewList
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -57,4 +57,17 @@ def create(response):
 
 def view(response):
     return render(response, "main/view.html", {})
+
+
+def delete_list(response, id):
+    to_do_list = ToDoList.objects.get(id=id)
+    to_do_list.delete()
+    return HttpResponseRedirect("/create")
+
+
+def delete_task(response, id):
+    task = Item.objects.get(id=id)
+    ls = ToDoList.objects.get(id=task.todolist_id)
+    task.delete()
+    return HttpResponseRedirect("/%i" % ls.id)
 
