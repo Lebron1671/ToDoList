@@ -6,66 +6,66 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
-def index(response, id):
+def index(request, id):
     try:
         ls = ToDoList.objects.get(id=id)
     except ObjectDoesNotExist:
         return HttpResponseRedirect("/view")
         #raise Http404("Page not found.")
-    if ls in response.user.todolist.all():
-        if response.method == "POST":
-            print(response.POST)
-            if response.POST.get("save"):
+    if ls in request.user.todolist.all():
+        if request.method == "POST":
+            print(request.POST)
+            if request.POST.get("save"):
                 for item in ls.item_set.all():
-                    if response.POST.get("c" + str(item.id)) == "clicked":
+                    if request.POST.get("c" + str(item.id)) == "clicked":
                         item.complete = True
                     else:
                         item.complete = False
                     item.save()
-            elif response.POST.get("newItem"):
-                txt = response.POST.get("new")
+            elif request.POST.get("newItem"):
+                txt = request.POST.get("new")
                 if len(txt) > 2:
                     ls.item_set.create(text=txt, complete=False)
                 else:
                     print("invalid")
-        return render(response, "main/list.html", {"ls": ls})
-    return render(response, "main/view.html", {})
+        return render(request, "main/list.html", {"ls": ls})
+    return render(request, "main/view.html", {})
 
 
-def home(response):
-    return render(response, 'main/home.html', {})
+def home(request):
+    return render(request, 'main/home.html', {})
 
 
-def create(response):
-    if response.method == "POST":
+def create(request):
+    if request.method == "POST":
         try:
-            form = CreateNewList(response.POST)
+            form = CreateNewList(request.POST)
 
             if form.is_valid():
                 n = form.cleaned_data["name"]
                 t = ToDoList(name=n)
                 t.save()
-                response.user.todolist.add(t)
+                request.user.todolist.add(t)
 
             return HttpResponseRedirect("/%i" %t.id)
         except AttributeError:
-            return render(response, 'main/home.html', {})
+            return render(request, 'main/home.html', {})
     else:
         form = CreateNewList()
-    return render(response, 'main/create.html', {"form": form})
+    return render(request, 'main/create.html', {"form": form})
 
 
-def view(response):
-    return render(response, "main/view.html", {})
+def view(request):
+    return render(request, "main/view.html", {})
 
 
-def delete_list(response, id):
+def delete_list(request, id):
     to_do_list = ToDoList.objects.get(id=id)
     to_do_list.delete()
     return HttpResponseRedirect("/create")
 
 
-def delete_task(response, id):
+def delete_task(request, id):
     task = Item.objects.get(id=id)
     ls = ToDoList.objects.get(id=task.todolist_id)
     task.delete()
